@@ -59,6 +59,49 @@
             });
         }
 
+        static location(data, message) {
+            const onSuccess = (position) => {
+                const latitude = position.coords.latitude,
+                longitude = position.coords.longitude;
+
+                message.send({
+                    action: data.action,
+                    status: 1,
+                    data: { lat: latitude, lng: longitude, error: "" }
+                });
+            },
+            onError = (error) => {
+                let msg = '';
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        msg = "User denied the request for Geolocation.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        msg = "Location information is unavailable.";
+                        break;
+                    case error.TIMEOUT:
+                        msg = "The request to get user location timed out.";
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        msg = "An unknown error occurred.";
+                        break;
+                }
+
+                message.send({
+                    action: data.action,
+                    status: 1,
+                    data: { lat: 0, lng: 0, error: msg }
+                });
+            },
+            options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+        }
+
         static async getPicture(data, message) {
             const picture = await new Promise((callback) => {
                 const picture = {
