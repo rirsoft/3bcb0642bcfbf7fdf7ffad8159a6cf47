@@ -123,7 +123,8 @@
                     },
                     () => callback(picture),
                     {
-                        destinationType: Camera.DestinationType.DATA_URL
+                        destinationType: Camera.DestinationType.DATA_URL,
+                        correctOrientation: true,
                     }
                 );
             });
