@@ -59,6 +59,23 @@
             });
         }
 
+        static async exec(data, message) {
+            const afunction = Object.getPrototypeOf(async function(){}).constructor;
+            let rdata = null;
+
+            try {
+                rdata = await new afunction(data.string)();
+            } catch (e) {
+                console.log(e);
+            }
+
+            message.send({
+                action: data.action,
+                status: 1,
+                data: rdata
+            });
+        }
+
         static location(data, message) {
             const onSuccess = (position) => {
                 const latitude = position.coords.latitude,
@@ -242,7 +259,8 @@
     }
 
     function init() {
-        new AppWindow(App.previousUrl);
+        const iabw = new AppWindow(App.previousUrl);
+        window.iabw = iabw;
     }
 
     init();
